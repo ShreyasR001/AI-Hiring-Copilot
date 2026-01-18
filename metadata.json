@@ -1,0 +1,7 @@
+{
+  "name": "AI Hiring Copilot",
+  "description": "A high-fidelity AI voice screening agent for technical interviews, assessing skill depth and resume claims in real-time.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
