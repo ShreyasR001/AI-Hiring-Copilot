@@ -17,19 +17,19 @@ const ROLES: InterviewRole[] = [
 const SYSTEM_PROMPT = `You are a world-class AI Hiring Copilot and Technical Screening Agent.
 Your objective is to conduct high-fidelity technical interviews with extreme precision.
 
-VTT & AUDIO PROCESSING PROTOCOLS:
-- TECHNICAL LEXICON: You are optimized for technical English. Prioritize recognition of jargon: "Kubernetes", "Microservices", "Concurrency", "TypeScript", "React Hooks", "B-Trees", "Dijkstra", "CI/CD", "Idempotency", "Normalization", etc.
-- ACCENT ROBUSTNESS: You are highly trained in understanding global English accents (Indian, East Asian, European, Hispanic, etc.). Focus on the semantic meaning and technical context.
-- NOISE REJECTION: Ignore non-verbal sounds: keyboard mechanical clicks, distant sirens, air conditioning hum, or background chatter. Treat these as environmental noise, not input.
-- LANGUAGE GATE: STICK TO ENGLISH. If non-English is detected, do not transcribe it; instead, ask the candidate to revert to English for the screening.
+STRICT ENGLISH PROTOCOL:
+- INTERACTION: YOU MUST ONLY SPEAK ENGLISH.
+- TRANSCRIPTION: YOU MUST ONLY TRANSCRIBE IN ENGLISH.
+- If the candidate speaks a language other than English, DO NOT TRANSCRIBE the foreign words. Instead, output the transcription: "[Non-English speech detected]" and verbally remind the candidate: "Please continue the interview in English only."
+- TECHNICAL LEXICON: Recognize jargon: "Kubernetes", "Microservices", "Concurrency", "TypeScript", "React Hooks", "B-Trees", "Dijkstra", "CI/CD", "Idempotency", "Normalization", etc.
+- ACCENT ROBUSTNESS: You are highly trained in understanding global English accents. Focus on the semantic technical meaning.
 
-INTERVIEW STYLE:
-- Professional, objective, and neutral senior engineer persona.
-- One question at a time. 
-- Ask probing follow-ups ("Can you explain the trade-offs?", "How would that scale?").
-- No hints, no verbal fillers ("I see", "Great"), and no external validation.
+VTT & AUDIO PROCESSING:
+- NOISE REJECTION: Ignore non-verbal sounds: keyboard clicks, sirens, or background chatter.
+- STYLE: One question at a time. Professional, objective, and neutral senior engineer persona.
+- Probing follow-ups only. No hints, no fillers, no validation.
 
-FIRST MESSAGE: "We will begin the technical screening. Note: This session is optimized for technical English and diverse accents. Please answer concisely." Followed immediately by the first question based on the candidate's resume or the role.`;
+FIRST MESSAGE: "Technical screening initialized. Note: This terminal strictly processes English only. Please answer all questions in technical English. We will begin now." Followed immediately by the first question based on the role or resume.`;
 
 const App: React.FC = () => {
   const [status, setStatus] = useState<InterviewStatus>(InterviewStatus.IDLE);
@@ -127,7 +127,7 @@ const App: React.FC = () => {
       streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
       const ai = new GoogleGenAI({ apiKey });
 
-      let instruction = `${SYSTEM_PROMPT}\nRole: ${selectedRole.title}. ${selectedRole.description}`;
+      let instruction = `${SYSTEM_PROMPT}\nTarget Role: ${selectedRole.title}. ${selectedRole.description}`;
       if (preInterviewReport) {
         instruction += `\nVerification Plan: ${preInterviewReport.verificationPlan}\nProbing Questions: ${preInterviewReport.targetedQuestions.join(', ')}`;
       }
@@ -146,7 +146,6 @@ const App: React.FC = () => {
             setStatus(InterviewStatus.ACTIVE);
             const source = inputAudioContextRef.current!.createMediaStreamSource(streamRef.current!);
             
-            // PRE-PROCESSING: Add DynamicsCompressor to help with noise and leveling
             const compressor = inputAudioContextRef.current!.createDynamicsCompressor();
             compressor.threshold.setValueAtTime(-50, inputAudioContextRef.current!.currentTime);
             compressor.knee.setValueAtTime(40, inputAudioContextRef.current!.currentTime);
@@ -299,14 +298,14 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-emerald-500 rounded-md flex items-center justify-center font-bold text-black">C</div>
-            <h1 className="text-xl font-semibold text-white tracking-tight">Hiring Copilot <span className="text-zinc-500 text-sm font-normal ml-2 text-[10px] bg-zinc-800 px-2 py-0.5 rounded uppercase">PRO VTT</span></h1>
+            <h1 className="text-xl font-semibold text-white tracking-tight">Hiring Copilot <span className="text-zinc-500 text-sm font-normal ml-2 text-[10px] bg-zinc-800 px-2 py-0.5 rounded uppercase">ENGLISH ONLY</span></h1>
           </div>
           <div className="flex items-center gap-4">
             {status === InterviewStatus.ACTIVE && (
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1.5 bg-zinc-800 px-3 py-1 rounded-full text-[10px] font-mono border border-zinc-700">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
-                  ENHANCED LEXICON
+                  STRICT VTT
                 </div>
                 <div className="flex items-center gap-2 bg-zinc-800 px-3 py-1 rounded-full text-xs font-mono">
                   <div className="pulse"></div>
@@ -324,7 +323,7 @@ const App: React.FC = () => {
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="text-center space-y-4">
               <h2 className="text-4xl font-bold text-white tracking-tight">Technical Screening Terminal</h2>
-              <p className="text-zinc-500 max-w-xl mx-auto italic">High-fidelity voice screening with accent robustness and background noise rejection.</p>
+              <p className="text-zinc-500 max-w-xl mx-auto italic">Strict English technical screening with accent robustness and background noise rejection.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -435,7 +434,7 @@ const App: React.FC = () => {
                     <div className="flex flex-col items-center justify-center py-20 space-y-4">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></div>
-                        <span className="text-zinc-500 font-mono text-sm">ENHANCED VTT INITIALIZED</span>
+                        <span className="text-zinc-500 font-mono text-sm">STRICT ENGLISH VTT ACTIVE</span>
                       </div>
                       <p className="text-zinc-600 italic text-center">Waiting for agent to speak...</p>
                     </div>
@@ -465,7 +464,7 @@ const App: React.FC = () => {
                     <div className="flex items-center gap-4">
                       <div className="text-[10px] font-bold text-emerald-600 uppercase flex items-center gap-1.5 px-3 py-1 bg-emerald-500/5 rounded-full border border-emerald-500/20">
                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                        Compressor Active
+                        English Enforcement: Active
                       </div>
                       <button onClick={requestEvaluation} className="text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-4 py-2 rounded-lg font-bold border border-zinc-700 transition-colors">REQUEST SUMMARY</button>
                     </div>
