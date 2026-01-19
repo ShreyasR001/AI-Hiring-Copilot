@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AI Hiring Copilot - Technical Screening</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -12,6 +12,8 @@
             font-family: 'Inter', sans-serif;
             background-color: #0a0a0a;
             color: #e5e5e5;
+            margin: 0;
+            overflow-x: hidden;
         }
         @keyframes pulse-ring {
             0% { transform: scale(.33); }
@@ -21,7 +23,7 @@
             position: relative;
             width: 20px;
             height: 20px;
-            background: #ef4444;
+            background: #10b981;
             border-radius: 50%;
         }
         .pulse::after {
@@ -32,9 +34,14 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: #ef4444;
+            background: #10b981;
             opacity: 0.5;
             animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        #root {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
     </style>
 <script type="importmap">
@@ -47,8 +54,13 @@
   }
 }
 </script>
+<script>
+    // Polyfill process for browser environment to prevent ReferenceErrors
+    window.process = window.process || { env: { API_KEY: "" } };
+</script>
 </head>
 <body>
     <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
 </body>
 </html>

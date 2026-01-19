@@ -1,11 +1,11 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { GoogleGenAI, Modality, LiveServerMessage, Type } from '@google/genai';
-import { InterviewRole, Message, InterviewStatus, SkillGraphData, PreInterviewReport } from './types';
-import { decode, decodeAudioData, createBlob } from './utils/audio';
-import Waveform from './components/Waveform';
-import SkillGraph from './components/SkillGraph';
-import PreInterviewReportView from './components/PreInterviewReportView';
+import { InterviewRole, Message, InterviewStatus, SkillGraphData, PreInterviewReport } from './types.ts';
+import { decode, decodeAudioData, createBlob } from './utils/audio.ts';
+import Waveform from './components/Waveform.tsx';
+import SkillGraph from './components/SkillGraph.tsx';
+import PreInterviewReportView from './components/PreInterviewReportView.tsx';
 
 const ROLES: InterviewRole[] = [
   { id: 'swe', title: 'Software Engineer', description: 'General software development, data structures, and algorithms.' },
@@ -227,7 +227,6 @@ const App: React.FC = () => {
   const updateTranscript = (role: 'interviewer' | 'candidate', text: string) => {
     setTranscript(prev => {
       const last = prev[prev.length - 1];
-      // Tighter timestamp for more responsive transcript building
       if (last && last.role === role && (Date.now() - last.timestamp < 3000)) {
         return [...prev.slice(0, -1), { ...last, text: last.text + ' ' + text }];
       }
